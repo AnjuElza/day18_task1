@@ -1,0 +1,71 @@
+.wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    margin: auto;
+}
+.container{
+    width: 20rem;
+}
+.card{
+    width: 20rem;
+}
+.card-header{
+    height:5rem;
+    align-items: center;
+    justify-content: center;
+    padding: 2px;
+}
+.country-img{
+    width: 16rem;
+}
+.country-flag{
+    width: 16rem;
+    height:10rem;
+}
+.card-title{
+    font-size:medium;
+    font-weight:bold;
+    width:10rem;
+}
+h4{
+    text-align: center;
+}
+.card-button{
+    margin:auto;
+    /*padding: 4px;*/
+    text-align: center;
+}
+#heading{
+    align-items: center;
+    font-size: larger;
+    font-weight: bolder;
+    color: blue;
+    background-color: bisque;
+    height:60px;
+    padding: 15px;
+    margin:auto;
+    text-align: center;
+}
+form {
+    padding: 0 2rem;
+}
+
+form > div {
+    justify-content: center;
+    margin: 1.4rem 0 2rem;
+}
+
+input{
+    height: 3rem;
+   width:40%;
+    border-radius: 5px;
+    background-color: hsl(0, 0%, 100%);
+    box-shadow: var(--box-shadow);
+}
+
+input[type=text] {
+    
+    padding-left: 2rem;
+}
