@@ -1,4 +1,5 @@
-const countries_url = "https://restcountries.com/v3.1/all";
+const countries_url = "https://date.nager.at/api/v3/AvailableCountries";
+
 const wrapper = document.querySelector('.wrapper');
 const searchCountry = document.querySelector('#input-country');
 const searchBar = document.querySelector('.search-bar');
@@ -27,15 +28,12 @@ function showCountry(data,key) {
     <div class="row col-lg-4 col-sm-12">
             <div class="col">
                 <div class="card text-bg-light mb-3" style="max-width: 18rem;">
-                    <div class="card-header country-name"><h4>${data[key].name.official}</h4></div>
+                    <div class="card-header country-name"><h4>${data[key].name}</h4></div>
                     <div class="card-body">
-                        <div class="country-img">
-                            <img class="country-flag" src="${data[key].flags.png}"/> 
-                        </div>
-                        <p><span class="card-title">Capital:</span>${data[key].capital}</p>
-                        <p><span class="card-title">Region:</span>${data[key].region}</p>
-                        <p><span class="card-title">Country Code:</span>${data[key].cioc}</p>
-                        <button class="btn btn-primary card-button" id='weatherDisplayBtn'>Click for Weather</button>
+                        
+                        <p><span class="card-title">Country Code:</span>${data[key].countryCode}</p>
+                       
+                        <button class="btn btn-primary card-button" id='weatherDisplayBtn'>Click for Public Holidays</button>
                         
                     </div>
                 </div>
@@ -52,75 +50,79 @@ function showCountry(data,key) {
 //for each of the inner page to show
 weatherButton= document.querySelector("#weatherDisplayBtn");
 country.addEventListener('click', () => {
-    getWeatherData(data,key);
+    getPublicHolidays(data,key);
     wrapper.style.display = 'none';
     searchBar.style.display = 'none';
  })
 }
 const weatherDisplayPage = document.querySelector('.weatherDisplayPage')
 
-async function getWeatherData(data,key){
+async function getPublicHolidays(data,key){
     console.log("test");
     weatherDisplayPage.style.display = 'block'; 
-    //const weatherDisplayPage = document.createElement('div');
-    lat=data[key].latlng[0];
-    lon=data[key].latlng[1];
-    console.log(lat);
-   // console.log(lat);
-   // country1.innerHTML="";
+    country_code=data[key].countryCode;
+    console.log(country_code);
    weatherDisplayPage.innerHTML="Loading...";
- const weather_url=`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=7999cbc68e1aee5b87b5f4126ace1ef9`;
+   ///api/v3/NextPublicHolidays/${countryCode}
+ const weather_url=`https://date.nager.at/api/v3/NextPublicHolidays/${country_code}`;
  //console.log(weather_url);
  try{
-    const res=await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=7999cbc68e1aee5b87b5f4126ace1ef9`);
+    const res=await fetch(`https://date.nager.at/api/v3/NextPublicHolidays/${country_code}`);
     const weather1=await res.json();
    console.log(weather1); 
-  // <thead>
-   //<tr>
-    // <th scope="col" id="heading">Weather</th>
-   //</tr>
- //</thead>
-   weatherDisplayPage.innerHTML = `
-    <div class="display-weather">
-    <h3 id="heading">Weather</h3>
-    <table class="table weather-table table-bordered">
- 
-  <tbody>
-  <tr>
-  <th scope="row">Country</th>
-  <td>${weather1.name}</td>
-  
-</tr>
-    <tr class="table-primary">
-      <th scope="row" >Temperature</th>
-      <td>${weather1.main.temp}</td>
-      
-    </tr>
-    <tr class="table-secondary">
-      <th scope="row">Pressure</th>
-      <td>${weather1.main.pressure}</td>
-    </tr>
-    <tr class="table-success">
-    <th scope="row">Humidity</th>
-    <td>${weather1.main.humidity}</td>
-  </tr>
-  <tr class="table-danger">
-    <th scope="row">Wind Speed</th>
-    <td>${weather1.wind.speed}</td>
-  </tr>
-  <tr class="table-warning">
-      <th scope="row">Visibility</th>
-      <td>${weather1.visibility}</td>
-      
-    </tr>
-  </tbody>
-</table>
-  </div>
-    `;
+//    weatherDisplayPage.innerHTML= `
+//   <div class="display-weather">
+//   <h3 id="heading">Public Holidays in coming 365 days</h3>
+// <table class="table weather-table table-bordered">
+
+// <tbody>`
+output = "<div class=\"display-weather\"><table id=\"table weather-table table-bordered\">";  //initialize output string
+output +="<h3 id=\"heading\">Public Holidays in coming 365 days</h3>"
+//build output string
+
+for (const key in weather1){
+  output  += "<tr>"
+            + "<td>"+weather1[key].date+"</td>"
+            + "<td>" + weather1[key].name +"</td>";
+    }
+output += "</tbody></table>";
+
+weatherDisplayPage.innerHTML = output; //output to DOM
+// weatherDisplayPage.innerHTML = "<table>";
+    
+// for (const key in weather1){
+//   weatherDisplayPage.innerHTML += "<tr>"
+//             + "<td>"+weather1[key].date+"</td>"
+//             + "<td>" + weather1[key].name +"</td>";
+//     }
+    
+//     weatherDisplayPage.innerHTML += "</table>";
+  //  for (const key in weather1){
+  //   showHolidays(weather1,key)
+  //  }
+//    weatherDisplayPage.innerHTML+= `
+//    </tbody>
+// </table>
+// </div>
+// `;
 }catch(error){
     weatherDisplayPage.innerHTML=error;
 }
 //wrapper.appendChild(weatherDisplayPage);
+}
+
+function showHolidays(countries,key) {
+  weatherDisplayPage.innerHTML+= `
+
+<tr>
+  
+  <td>${countries[key].date}</td><td>${countries[key].name}</td>
+</tr>
+`;
+
+
+  
+  //weatherDisplayPage.appendChild(weatherDisplayPage);
 }
 
 function searchCountryByName(){
